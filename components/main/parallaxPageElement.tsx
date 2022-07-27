@@ -5,14 +5,27 @@ import Image from 'next/image'
 import styles from './Home.module.css'
 
 import * as url from "url";
+import {func} from "prop-types";
 
 
 export default function ParallaxPageElement() {
+
+
+
+    function handleScroll(event: React.UIEvent<HTMLDivElement>) {
+        const containerHeight = event.currentTarget.clientHeight;
+        const scrollHeight = event.currentTarget.scrollHeight;
+
+        const scrollTop = event.currentTarget.scrollTop;
+        let percentage = ((scrollTop + containerHeight) / scrollHeight) * 100
+    }
+
     return (
-        <div className={styles.background}>
+        <div className={styles.background} onScroll={handleScroll}
+        >
             <Parallax pages={4}>
 
-   {/*             <ParallaxLayer
+                {/*             <ParallaxLayer
                     offset={0}
                     speed={1}
                     factor={2}
