@@ -1,0 +1,8 @@
+.background {
+    height: 400vh;
+    background: linear-gradient(
+            180deg,
+            hsla(162, 100%, 71%, 1) 0%,
+            hsla(60, 100%, 82%, 1) 100%
+    );
+}

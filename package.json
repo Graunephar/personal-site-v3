@@ -6,12 +6,18 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "export": "next build && next export && npm run replaceFilePaths ",
+    "replaceFilePaths": "ts-node replacer.ts"
   },
   "dependencies": {
+    "@react-spring/parallax": "^9.5.2",
     "next": "12.2.3",
+    "next-images": "^1.8.4",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "replace-in-file": "^6.3.5",
+    "ts-node": "^10.9.1"
   },
   "devDependencies": {
     "@types/node": "18.6.1",
