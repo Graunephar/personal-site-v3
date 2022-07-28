@@ -35,7 +35,8 @@ export default function ParallaxPageElement() {
             overflow: 'hidden',
             width: '100%',
             left: '50%',
-            transform: 'translateX(-50%);'
+            transform: 'translateX(-50%);',
+            zIndex: 1000000000000000000,
         });
     })
 
@@ -98,8 +99,13 @@ export default function ParallaxPageElement() {
             <Headline {...headlineColor}>DANIEL GRAUNGAARD</Headline>
 
             <Parallax pages={NUMBER_OF_PAGES} ref={scrollRef} className='my-class-name'>
+                <ParallaxLayer
+                    className={styles.gradient}
+                    speed={1}
+                    factor={40}
+                />
 
-                {/*             <ParallaxLayer
+                <ParallaxLayer
                     offset={0}
                     speed={1}
                     factor={2}
@@ -130,23 +136,14 @@ export default function ParallaxPageElement() {
                     style={{textAlign: 'center'}}
                 >
 
-                </ParallaxLayer>*/}
-
-
-                <ParallaxLayer
-                    offset={0.2}
-                    speed={0.05}
-                    style={{
-                        position: 'sticky',
-                        color: 'black',
-                    }}
-                >
                 </ParallaxLayer>
+
 
                 <ParallaxLayer
                     offset={2}
                     speed={2}
                     style={{
+                        zIndex: 100000000000000000000,
                         color: 'white',
                     }}
 
