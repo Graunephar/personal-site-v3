@@ -8,6 +8,7 @@ import styled from '@emotion/styled'
 import {useMediaQuery} from "react-responsive";
 import {config} from "@react-spring/core";
 import {useSpring, animated, to} from 'react-spring'
+import ExplodeMe from "../explode_me/ExplodeMe";
 
 interface rgbaColor {
     red: number,
@@ -137,6 +138,7 @@ export default function ParallaxPageElement() {
                         src={land}
                         alt="Picture of the author"
                     />
+                    <ExplodeMe />
 
                 </ParallaxLayer>
 
