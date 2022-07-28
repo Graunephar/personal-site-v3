@@ -7,10 +7,6 @@ import Image from 'next/image'
 import styles from './Home.module.css'
 import styled from '@emotion/styled'
 
-import * as url from "url";
-import {func} from "prop-types";
-import {start} from "repl";
-
 interface rgbaColor {
     red: number,
     green: number,
@@ -28,10 +24,11 @@ export default function ParallaxPageElement() {
     const NUMBER_OF_PAGES = 10
     const Headline = styled.h2<rgbaColor>(currentColorToRenderHeadline => {
         return ({
+            fontSize: '8vw',
             textAlign: 'center',
             color: 'rgba(' + currentColorToRenderHeadline.red + ',' + currentColorToRenderHeadline.green + ',' + currentColorToRenderHeadline.blue + ',' + currentColorToRenderHeadline.alpha + ')',
             position: 'fixed',
-            top: 0,
+            top: '5vh',
             overflow: 'hidden',
             width: '100%',
             left: '50%',
@@ -40,26 +37,13 @@ export default function ParallaxPageElement() {
         });
     })
 
-    function handleScroll(event: React.UIEvent<HTMLDivElement>) {
-        const containerHeight = event.currentTarget.clientHeight;
-        const scrollHeight = event.currentTarget.scrollHeight;
 
-        const scrollTop = event.currentTarget.scrollTop;
-        let percentage = ((scrollTop + containerHeight) / scrollHeight) * 100
-        let ratio = ((scrollTop + containerHeight) / scrollHeight)
-        //setHeadlineColor(interpolateColors(startColor, endColor, ratio))
-        setHeadlineColor({red: 100, blue: 10, green: 10, alpha: 255})
-    }
-
-    function handleScroll2() {
-
+    function handleScroll() {
         let scrollProgress = scrollRef.current?.current
         if (scrollProgress == undefined) return
 
         const totalHeightOfScrollElement = (NUMBER_OF_PAGES - 1) * window.innerHeight //THis could be moved top a constant calculated once for better performance. However requires to only be set once so that window is in scope and set. And therefore should be recalculated eveytime window is resized. So for now just calculatign eveytime.
         let scrollRatio = scrollProgress / (totalHeightOfScrollElement);
-
-        //setHeadlineColor({red: scrollRatio, blue: 10, green: 10, alpha: 255})
 
         setHeadlineColor(interpolateColors(startColor, endColor, scrollRatio))
 
@@ -67,14 +51,6 @@ export default function ParallaxPageElement() {
 
 
     function interpolateColors(startColor: rgbaColor, endColor: rgbaColor, ratio: number): rgbaColor {
-
-        /*const interpolate = (start,end,ratio)=>{
-            const r = Math.trunc(ratio*end[0] + (1-ratio)*start[0])
-            const g = Math.trunc(ratio*end[1] + (1-ratio)*start[1])
-            const b = Math.trunc(ratio*end[2] + (1-ratio)*start[2])
-            return [r,g,b]
-        }*/
-
         const r = Math.trunc(ratio * endColor.red + (1 - ratio) * startColor.red)
         const g = Math.trunc(ratio * endColor.green + (1 - ratio) * startColor.green)
         const b = Math.trunc(ratio * endColor.blue + (1 - ratio) * startColor.blue)
@@ -86,9 +62,9 @@ export default function ParallaxPageElement() {
     useEffect(() => {
         const container = document.querySelector('.my-class-name')
         if (container != null) {
-            container.addEventListener('scroll', handleScroll2)
+            container.addEventListener('scroll', handleScroll)
             return () => {
-                container.removeEventListener('scroll', handleScroll2)
+                container.removeEventListener('scroll', handleScroll)
             }
         }
     });
@@ -96,14 +72,19 @@ export default function ParallaxPageElement() {
 
     return (
         <div className={styles.background}>
-            <Headline {...headlineColor}>DANIEL GRAUNGAARD</Headline>
-
             <Parallax pages={NUMBER_OF_PAGES} ref={scrollRef} className='my-class-name'>
                 <ParallaxLayer
                     className={styles.gradient}
                     speed={1}
-                    factor={40}
+                    factor={19}
                 />
+                <ParallaxLayer
+                    sticky={{start: 0.33, end: 5}}
+                    factor={19}
+                    offset={0}
+                >
+                    <Headline {...headlineColor}>DANIEL GRAUNGAARD</Headline>
+                </ParallaxLayer>
 
                 <ParallaxLayer
                     offset={0}
