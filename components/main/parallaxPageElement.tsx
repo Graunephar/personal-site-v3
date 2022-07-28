@@ -45,7 +45,7 @@ export default function ParallaxPageElement() {
 
     const BoundingHeadlineBox = styled.div(() => ({
         overflow: 'hidden',
-        height: '30vh',
+        height: '40vh',
     }))
 
 
@@ -98,7 +98,8 @@ export default function ParallaxPageElement() {
 
     const {o, xyz, color} = useSpring({
         delay: 0,
-        config: config.slow,
+        /*config: config.slow, */
+        config: {mass:20, tension:60, friction:20},
         from: {o: 0, xyz: [0, 200, 10000], color: 'red'},
         to: {o: 1, xyz: [0, 0, 0], color: 'green'},
     })
@@ -139,6 +140,7 @@ export default function ParallaxPageElement() {
 
                 </ParallaxLayer>
 
+                {/*
                 <ParallaxLayer
                     offset={0}
                     speed={1}
@@ -152,25 +154,13 @@ export default function ParallaxPageElement() {
                     />
 
                 </ParallaxLayer>
+                */ }
 
                 <ParallaxLayer
                     sticky={{start: 0.9, end: 2.5}}
                     style={{textAlign: 'center'}}
                 >
 
-                </ParallaxLayer>
-
-
-                <ParallaxLayer
-                    offset={2}
-                    speed={2}
-                    style={{
-                        zIndex: 100000000000000000000,
-                        color: 'white',
-                    }}
-
-                >
-                    <h2>Hi</h2>
                 </ParallaxLayer>
 
             </Parallax>
