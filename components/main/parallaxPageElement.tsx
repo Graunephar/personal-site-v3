@@ -1,12 +1,13 @@
 import {IParallax, Parallax, ParallaxLayer} from "@react-spring/parallax";
 import {useState, useEffect, useCallback, useRef, createRef} from "react";
-
 import moon from '/components/main/img/moon.png';
 import land from '/components/main/img/land.png'
 import Image from 'next/image'
 import styles from './Home.module.css'
 import styled from '@emotion/styled'
 import {useMediaQuery} from "react-responsive";
+import {config} from "@react-spring/core";
+import {useSpring, animated, to} from 'react-spring'
 
 interface rgbaColor {
     red: number,
@@ -19,7 +20,7 @@ export default function ParallaxPageElement() {
     const scrollRef = useRef<IParallax>(null);
     const [viewWidth, setViewWidth] = useState<number>(700);
     const isMobile = viewWidth <= 400;
-    const isPortrait = useMediaQuery({ query: '(orientation: portrait)' })
+    const isPortrait = useMediaQuery({query: '(orientation: portrait)'})
 
     //0, 48, 73
     //214, 40, 40
@@ -42,10 +43,10 @@ export default function ParallaxPageElement() {
         });
     })
 
-    function checkForDevice(){
-       return window.innerWidth
-    }
-
+    const BoundingHeadlineBox = styled.div(() => ({
+        overflow: 'hidden',
+        height: '30vh',
+    }))
 
 
     function handleScroll() {
@@ -83,7 +84,24 @@ export default function ParallaxPageElement() {
         }
 
     });
-    
+
+    const [flip, set] = useState(false)
+
+    const props = useSpring({
+        from: {opacity: 0, height: 0},
+        to: {opacity: 1, height: 1},
+        delay: 200,
+        config: config.molasses,
+        onRest: () => set(!flip),
+    })
+
+
+    const {o, xyz, color} = useSpring({
+        delay: 0,
+        config: config.slow,
+        from: {o: 0, xyz: [0, 200, 10000], color: 'red'},
+        to: {o: 1, xyz: [0, 0, 0], color: 'green'},
+    })
 
 
     return (
@@ -99,7 +117,13 @@ export default function ParallaxPageElement() {
                     factor={19}
                     offset={0}
                 >
-                    <Headline {...headlineColor}>DANIEL GRAUNGAARD</Headline>
+                    <BoundingHeadlineBox>
+                        <animated.div style={{
+                            transform: xyz.to((x, y, z) => `translate3d(${x}px, ${y}px, ${z}px)`),
+                        }}>
+                            <Headline {...headlineColor}>DANIEL GRAUNGAARD</Headline>
+                        </animated.div>
+                    </BoundingHeadlineBox>
                 </ParallaxLayer>
 
                 <ParallaxLayer
