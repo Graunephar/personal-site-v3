@@ -6,6 +6,7 @@ import land from '/components/main/img/land.png'
 import Image from 'next/image'
 import styles from './Home.module.css'
 import styled from '@emotion/styled'
+import {useMediaQuery} from "react-responsive";
 
 interface rgbaColor {
     red: number,
@@ -16,6 +17,10 @@ interface rgbaColor {
 
 export default function ParallaxPageElement() {
     const scrollRef = useRef<IParallax>(null);
+    const [viewWidth, setViewWidth] = useState<number>(700);
+    const isMobile = viewWidth <= 400;
+    const isPortrait = useMediaQuery({ query: '(orientation: portrait)' })
+
     //0, 48, 73
     //214, 40, 40
     const startColor: rgbaColor = {red: 0, green: 48, blue: 73, alpha: 1}
@@ -37,11 +42,15 @@ export default function ParallaxPageElement() {
         });
     })
 
+    function checkForDevice(){
+       return window.innerWidth
+    }
+
+
 
     function handleScroll() {
         let scrollProgress = scrollRef.current?.current
         if (scrollProgress == undefined) return
-
         const totalHeightOfScrollElement = (NUMBER_OF_PAGES - 1) * window.innerHeight //THis could be moved top a constant calculated once for better performance. However requires to only be set once so that window is in scope and set. And therefore should be recalculated eveytime window is resized. So for now just calculatign eveytime.
         let scrollRatio = scrollProgress / (totalHeightOfScrollElement);
 
@@ -59,15 +68,22 @@ export default function ParallaxPageElement() {
         return {red: r, green: g, blue: b, alpha: a}
     }
 
+    function handleWindowSizeChange() {
+        setViewWidth(window.innerWidth);
+    }
+
     useEffect(() => {
         const container = document.querySelector('.my-class-name')
-        if (container != null) {
-            container.addEventListener('scroll', handleScroll)
-            return () => {
-                container.removeEventListener('scroll', handleScroll)
-            }
+        window.addEventListener('resize', handleWindowSizeChange);
+        if (container != null) container.addEventListener('scroll', handleScroll)
+
+        return () => {
+            if (container != null) container.removeEventListener('scroll', handleScroll)
+            window.removeEventListener('resize', handleWindowSizeChange);
         }
+
     });
+    
 
 
     return (
@@ -79,11 +95,24 @@ export default function ParallaxPageElement() {
                     factor={19}
                 />
                 <ParallaxLayer
-                    sticky={{start: 0.33, end: 5}}
+                    sticky={isPortrait ? {start: 0.4, end: 5} : {start: 0.25, end: 5}}
                     factor={19}
                     offset={0}
                 >
                     <Headline {...headlineColor}>DANIEL GRAUNGAARD</Headline>
+                </ParallaxLayer>
+
+                <ParallaxLayer
+                    offset={3}
+                    speed={-0.7}
+                    factor={4}
+                >
+                    <Image
+                        objectFit="cover"
+                        src={land}
+                        alt="Picture of the author"
+                    />
+
                 </ParallaxLayer>
 
                 <ParallaxLayer
@@ -100,18 +129,6 @@ export default function ParallaxPageElement() {
 
                 </ParallaxLayer>
 
-                <ParallaxLayer
-                    offset={2}
-                    speed={1}
-                    factor={4}
-                >
-                    <Image
-                        objectFit="cover"
-                        src={land}
-                        alt="Picture of the author"
-                    />
-
-                </ParallaxLayer>
                 <ParallaxLayer
                     sticky={{start: 0.9, end: 2.5}}
                     style={{textAlign: 'center'}}

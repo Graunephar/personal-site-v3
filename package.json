@@ -11,8 +11,6 @@
     "replaceFilePaths": "ts-node replacer.ts"
   },
   "dependencies": {
-    "@emotion/react": "^11.9.3",
-    "@emotion/styled": "^11.9.3",
     "//": [
       "COMMENT - as per npm mailing list: https://stackoverflow.com/questions/14221579/how-do-i-add-comments-to-package-json-for-npm-install",
       "We DEPEND on a the internal calculation of react-spring for calculating scroll progress for the animations",
@@ -20,11 +18,14 @@
       "This is not ideal, but was the only possible solution, and after all this is just my personal website",
       "The mechanisme that we depend on for the animations is described here: https://github.com/pmndrs/react-spring/discussions/1333"
     ],
+    "@emotion/react": "^11.9.3",
+    "@emotion/styled": "^11.9.3",
     "@react-spring/parallax": "^9.5.2",
     "next": "12.2.3",
     "next-images": "^1.8.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-responsive": "^9.0.0-beta.10",
     "replace-in-file": "^6.3.5",
     "ts-node": "^10.9.1"
   },
