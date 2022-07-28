@@ -1,5 +1,7 @@
 .background {
-    height: 400vh;
+    /*height: 400vh;*/
+    height: 100vh;
+    text-align: center;
     background: linear-gradient(
             180deg,
             hsla(162, 100%, 71%, 1) 0%,

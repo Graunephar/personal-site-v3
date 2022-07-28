@@ -1,16 +1,43 @@
-import {Parallax, ParallaxLayer} from "@react-spring/parallax";
+import {IParallax, Parallax, ParallaxLayer} from "@react-spring/parallax";
+import {useState, useEffect, useCallback, useRef, createRef} from "react";
+
 import moon from '/components/main/img/moon.png';
 import land from '/components/main/img/land.png'
 import Image from 'next/image'
 import styles from './Home.module.css'
+import styled from '@emotion/styled'
 
 import * as url from "url";
 import {func} from "prop-types";
+import {start} from "repl";
 
+interface rgbaColor {
+    red: number,
+    green: number,
+    blue: number,
+    alpha: number
+}
 
 export default function ParallaxPageElement() {
-
-
+    const scrollRef = useRef<IParallax>(null);
+    //0, 48, 73
+    //214, 40, 40
+    const startColor: rgbaColor = {red: 0, green: 48, blue: 73, alpha: 1}
+    const endColor: rgbaColor = {red: 214, green: 40, blue: 40, alpha: 1}
+    const [headlineColor, setHeadlineColor] = useState<rgbaColor>(startColor);
+    const NUMBER_OF_PAGES = 10
+    const Headline = styled.h2<rgbaColor>(currentColorToRenderHeadline => {
+        return ({
+            textAlign: 'center',
+            color: 'rgba(' + currentColorToRenderHeadline.red + ',' + currentColorToRenderHeadline.green + ',' + currentColorToRenderHeadline.blue + ',' + currentColorToRenderHeadline.alpha + ')',
+            position: 'fixed',
+            top: 0,
+            overflow: 'hidden',
+            width: '100%',
+            left: '50%',
+            transform: 'translateX(-50%);'
+        });
+    })
 
     function handleScroll(event: React.UIEvent<HTMLDivElement>) {
         const containerHeight = event.currentTarget.clientHeight;
@@ -18,12 +45,59 @@ export default function ParallaxPageElement() {
 
         const scrollTop = event.currentTarget.scrollTop;
         let percentage = ((scrollTop + containerHeight) / scrollHeight) * 100
+        let ratio = ((scrollTop + containerHeight) / scrollHeight)
+        //setHeadlineColor(interpolateColors(startColor, endColor, ratio))
+        setHeadlineColor({red: 100, blue: 10, green: 10, alpha: 255})
     }
 
+    function handleScroll2() {
+
+        let scrollProgress = scrollRef.current?.current
+        if (scrollProgress == undefined) return
+
+        const totalHeightOfScrollElement = (NUMBER_OF_PAGES - 1) * window.innerHeight //THis could be moved top a constant calculated once for better performance. However requires to only be set once so that window is in scope and set. And therefore should be recalculated eveytime window is resized. So for now just calculatign eveytime.
+        let scrollRatio = scrollProgress / (totalHeightOfScrollElement);
+
+        //setHeadlineColor({red: scrollRatio, blue: 10, green: 10, alpha: 255})
+
+        setHeadlineColor(interpolateColors(startColor, endColor, scrollRatio))
+
+    }
+
+
+    function interpolateColors(startColor: rgbaColor, endColor: rgbaColor, ratio: number): rgbaColor {
+
+        /*const interpolate = (start,end,ratio)=>{
+            const r = Math.trunc(ratio*end[0] + (1-ratio)*start[0])
+            const g = Math.trunc(ratio*end[1] + (1-ratio)*start[1])
+            const b = Math.trunc(ratio*end[2] + (1-ratio)*start[2])
+            return [r,g,b]
+        }*/
+
+        const r = Math.trunc(ratio * endColor.red + (1 - ratio) * startColor.red)
+        const g = Math.trunc(ratio * endColor.green + (1 - ratio) * startColor.green)
+        const b = Math.trunc(ratio * endColor.blue + (1 - ratio) * startColor.blue)
+        const a = Math.trunc(ratio * endColor.alpha + (1 - ratio) * startColor.alpha)
+
+        return {red: r, green: g, blue: b, alpha: a}
+    }
+
+    useEffect(() => {
+        const container = document.querySelector('.my-class-name')
+        if (container != null) {
+            container.addEventListener('scroll', handleScroll2)
+            return () => {
+                container.removeEventListener('scroll', handleScroll2)
+            }
+        }
+    });
+
+
     return (
-        <div className={styles.background} onScroll={handleScroll}
-        >
-            <Parallax pages={4}>
+        <div className={styles.background}>
+            <Headline {...headlineColor}>DANIEL GRAUNGAARD</Headline>
+
+            <Parallax pages={NUMBER_OF_PAGES} ref={scrollRef} className='my-class-name'>
 
                 {/*             <ParallaxLayer
                     offset={0}
@@ -58,6 +132,7 @@ export default function ParallaxPageElement() {
 
                 </ParallaxLayer>*/}
 
+
                 <ParallaxLayer
                     offset={0.2}
                     speed={0.05}
@@ -66,7 +141,6 @@ export default function ParallaxPageElement() {
                         color: 'black',
                     }}
                 >
-                    <h2>DANIEL GRAUNGAARD</h2>
                 </ParallaxLayer>
 
                 <ParallaxLayer
@@ -84,3 +158,4 @@ export default function ParallaxPageElement() {
         </div>
     )
 }
+
