@@ -105,7 +105,6 @@ export default function ParallaxPageElement() {
         to: {o: 1, xyz: [0, 0, 0], color: 'green'},
     })
 
-
     return (
         <div className={styles.background}>
             <Parallax pages={NUMBER_OF_PAGES} ref={scrollRef} className='my-class-name'>
@@ -129,15 +128,14 @@ export default function ParallaxPageElement() {
                 </ParallaxLayer>
 
                 <ParallaxLayer
-                    offset={3}
-                    speed={-0.7}
-                    factor={4}
+                    offset={2}
+                    speed={1}
                 >
-                    <Image
+             {/*       <Image
                         objectFit="cover"
                         src={land}
                         alt="Picture of the author"
-                    />
+                    />*/}
                     <ExplodeMe />
 
                 </ParallaxLayer>
