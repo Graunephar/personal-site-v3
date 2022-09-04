@@ -36,6 +36,16 @@ h2 {
   font-size: 10vw;
 }
 
+h3 {
+  text-align: center;
+  font-family: League Spartan, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 400;
+  font-size: 5vw;
+}
+
+
 
 /* league-spartan-100 - latin */
 @font-face {

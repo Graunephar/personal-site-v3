@@ -28,8 +28,8 @@ export default function ParallaxPageElement() {
 
     //0, 48, 73
     //214, 40, 40
-    const startColor: rgbaColor = {red: 0, green: 48, blue: 73, alpha: 1}
-    const endColor: rgbaColor = {red: 214, green: 40, blue: 40, alpha: 1}
+    const startColor: rgbaColor = {red: 191, green: 26, blue: 47, alpha: 1}
+    const endColor: rgbaColor = {red: 250, green: 188, blue: 60, alpha: 1}
     const [headlineColor, setHeadlineColor] = useState<rgbaColor>(startColor);
     const NUMBER_OF_PAGES = 10
     const Headline = styled.h2<rgbaColor>(currentColorToRenderHeadline => {
@@ -108,6 +108,10 @@ export default function ParallaxPageElement() {
         to: {o: 1, xyz: [0, 0, 0], color: 'green'},
     })
 
+    const SmallText = styled.h3(()=> ({
+        color: "#ffffff"
+    }))
+
     return (
         <div className={styles.background}>
             <Parallax pages={NUMBER_OF_PAGES} ref={scrollRef} className='my-class-name'>
@@ -146,11 +150,11 @@ export default function ParallaxPageElement() {
                 </ParallaxLayer>
 
                 <ParallaxLayer
-                    offset={6}
+                    offset={5.5}
                     speed={1}
                 >
                     <BoundingHeadlineBox>
-                            <Headline {...headlineColor}>Thats me</Headline>
+                            <SmallText {...headlineColor}>That&apos;s me</SmallText>
                     </BoundingHeadlineBox>
                 </ParallaxLayer>
 
