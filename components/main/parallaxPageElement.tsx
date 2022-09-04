@@ -10,6 +10,7 @@ import {config} from "@react-spring/core";
 import {useSpring, animated, to} from 'react-spring'
 import ExplodeMe from "../explode_me/ExplodeMe";
 import {start} from "repl";
+import ListAboutMe from "../list_about_me/ListAboutMe";
 
 interface rgbaColor {
     red: number,
@@ -78,7 +79,7 @@ export default function ParallaxPageElement() {
     }
 
     useEffect(() => {
-        const container = document.querySelector('.my-class-name')
+        const container = document.querySelector('.scroll-container-class-name')
         window.addEventListener('resize', handleWindowSizeChange);
         if (container != null) container.addEventListener('scroll', handleScroll)
 
@@ -114,14 +115,14 @@ export default function ParallaxPageElement() {
 
     return (
         <div className={styles.background}>
-            <Parallax pages={NUMBER_OF_PAGES} ref={scrollRef} className='my-class-name'>
+            <Parallax pages={NUMBER_OF_PAGES} ref={scrollRef} className='scroll-container-class-name'>
                 <ParallaxLayer
                     className={styles.gradient}
                     speed={1}
                     factor={19}
                 />
                 <ParallaxLayer
-                    sticky={isPortrait ? {start: 0.4, end: 5} : {start: 0.25, end: 5}}
+                    sticky={isPortrait ? {start: 0.4, end: 3.5} : {start: 0.25, end: 3.5}}
                     factor={19}
                     offset={0}
                 >
@@ -150,13 +151,15 @@ export default function ParallaxPageElement() {
                 </ParallaxLayer>
 
                 <ParallaxLayer
-                    offset={5.5}
+                    offset={4}
                     speed={1}
                 >
                     <BoundingHeadlineBox>
                             <SmallText {...headlineColor}>That&apos;s me</SmallText>
                     </BoundingHeadlineBox>
                 </ParallaxLayer>
+
+
 
                 {/*
                 <ParallaxLayer
@@ -175,9 +178,12 @@ export default function ParallaxPageElement() {
                 */}
 
                 <ParallaxLayer
-                    sticky={{start: 0.9, end: 2.5}}
-                    style={{textAlign: 'center'}}
+                    offset={4.7}
+                    factor={5}
+                    speed={1}
                 >
+
+                    <ListAboutMe />
 
                 </ParallaxLayer>
 

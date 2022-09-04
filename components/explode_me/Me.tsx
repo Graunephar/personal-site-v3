@@ -36,6 +36,7 @@ export default function Me(props: propsType) {
     const [skew, setSkew] = useState<number>(10);
     const [translate, setTranslate] = useState<number>(20);
     const [rotate, setRotate] = useState<number>(-20);
+    const [opacity, setOpacity] = useState<number>(0);
 
     let exploding, mainSVG, layers, segment: any
 
@@ -49,6 +50,7 @@ export default function Me(props: propsType) {
         setSkew(30 - (30 * scaleValue))
         setTranslate(10 - (10 * scaleValue))
         setRotate(2 - (2 * scaleValue))
+        setOpacity(scaleValue < 1 ? scaleValue : 2 - scaleValue)
         explodeAndDistributeLayers(layers);
 
     })
@@ -58,6 +60,7 @@ export default function Me(props: propsType) {
         let rootIndex = 0;
         // we go through each layer of SVG element
         for (const layer of layers) {
+            layer.setAttribute("opacity", opacity)
 
             // if we see that the layer is another group (of layers potentially), we loop through it as well:
             if (layer.tagName === "g" && layer.children.length > 1) {
