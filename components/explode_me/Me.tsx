@@ -1,7 +1,7 @@
 import {render} from "react-dom";
 import me from "./me.svg";
 import Image from 'next/image'
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 
 /**
  * SVG content Created by exporting svg and running the content of the SVG though this converter:
@@ -17,15 +17,25 @@ import React, {useEffect} from "react";
  * It uses basic js to transform the SVG. It would probably be cleaner to do it in react but since its only svg I think it will do.
  *
  * HERE SHOULD BE A COMMENT ON HOW TO TREAT THE LAYER IN ILLUSTRATOR
+ * edit: Reading this one and a half months after doing it I have already forgotten how to threat the layer. So thats a problkem for future me if I want to do it again...
  *
  */
 
-export default function Me() {
+
+interface propsType  {
+    scrollRatio: number
+}
+
+
+export default function Me(props: propsType) {
 
     /**
      * Create a custom prop here representing a slider  and set the content of each of the css trabnsformations below to use that prop so that when it goes to zero, the svg goes to normal.
      */
 
+    const [skew, setSkew] = useState<number>(10);
+    const [translate, setTranslate] = useState<number>(20);
+    const [rotate, setRotate] = useState<number>(-20);
 
     let exploding, mainSVG, layers, segment: any
 
@@ -33,9 +43,14 @@ export default function Me() {
 
         mainSVG = document.getElementsByTagName("svg")[0];
         layers = mainSVG.children;
-        segment = 240 / layers.length;
-
+        //segment = 240 / layers.length;
+        let scaleValue = calculateScaleValue(props.scrollRatio, 0.175, 0.290, 0, 1)
+        segment = 30 - (30 * scaleValue)
+        setSkew(30 - (30 * scaleValue))
+        setTranslate(10 - (10 * scaleValue))
+        setRotate(2 - (2 * scaleValue))
         explodeAndDistributeLayers(layers);
+
     })
 
     // like so: segment = 240 / layers.length;
@@ -52,7 +67,9 @@ export default function Me() {
                 // each layer gets transform where first 3 transformations are typical for building isometric explosion view. The last one is a simple formula to help set layers a bit "apart":
                 for (const sublayer of layer.children) {
 
-                    let transformString = `scale(0.8) skewX(30) rotate(-10) translate(50,-50) translate(${groupIndex * segment / 2},${-groupIndex * segment / 2})`;
+                    let moveThisLayerBy = (groupIndex - (layer.children.length / 2)) * segment / 2
+
+                    let transformString = `scale(0.5) skewX(${skew}) rotate(${rotate}) translate(${translate},${translate*-1}) translate(${moveThisLayerBy},${-moveThisLayerBy})`;
 
                     sublayer.setAttribute("transform", transformString);
 
@@ -69,6 +86,10 @@ export default function Me() {
                 rootIndex++;
             }
         }
+    }
+
+    function calculateScaleValue (number: number, inMin: number, inMax: number, outMin: number, outMax: number) {
+        return (number - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
     }
 
 
@@ -2294,7 +2315,5 @@ export default function Me() {
                       d="M449.39,150.4c-.55,2.97-2.58,5.3-5.18,6.37-1.18-.08-2.43-.14-3.75-.17-1.12-.03-2.19-.03-3.22-.02-3.43-1.63-5.47-5.41-4.74-9.32,.87-4.66,5.35-7.74,10.02-6.87,4.66,.87,7.74,5.36,6.87,10.02Z"/>
             </g>
         </svg>
-
-
     )
 }

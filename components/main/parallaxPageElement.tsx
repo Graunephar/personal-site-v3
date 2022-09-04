@@ -9,6 +9,7 @@ import {useMediaQuery} from "react-responsive";
 import {config} from "@react-spring/core";
 import {useSpring, animated, to} from 'react-spring'
 import ExplodeMe from "../explode_me/ExplodeMe";
+import {start} from "repl";
 
 interface rgbaColor {
     red: number,
@@ -22,6 +23,8 @@ export default function ParallaxPageElement() {
     const [viewWidth, setViewWidth] = useState<number>(700);
     const isMobile = viewWidth <= 400;
     const isPortrait = useMediaQuery({query: '(orientation: portrait)'})
+
+    const [scrollRatio, setScrollRatio] = useState<number>(0);
 
     //0, 48, 73
     //214, 40, 40
@@ -55,11 +58,11 @@ export default function ParallaxPageElement() {
         if (scrollProgress == undefined) return
         const totalHeightOfScrollElement = (NUMBER_OF_PAGES - 1) * window.innerHeight //THis could be moved top a constant calculated once for better performance. However requires to only be set once so that window is in scope and set. And therefore should be recalculated eveytime window is resized. So for now just calculatign eveytime.
         let scrollRatio = scrollProgress / (totalHeightOfScrollElement);
-
+        //The scrollratio value will go from 0 to 1 as the page is scrolled
+        setScrollRatio(scrollRatio) // set the state global
         setHeadlineColor(interpolateColors(startColor, endColor, scrollRatio))
 
     }
-
 
     function interpolateColors(startColor: rgbaColor, endColor: rgbaColor, ratio: number): rgbaColor {
         const r = Math.trunc(ratio * endColor.red + (1 - ratio) * startColor.red)
@@ -100,7 +103,7 @@ export default function ParallaxPageElement() {
     const {o, xyz, color} = useSpring({
         delay: 0,
         /*config: config.slow, */
-        config: {mass:20, tension:60, friction:20},
+        config: {mass: 20, tension: 60, friction: 20},
         from: {o: 0, xyz: [0, 200, 10000], color: 'red'},
         to: {o: 1, xyz: [0, 0, 0], color: 'green'},
     })
@@ -130,14 +133,25 @@ export default function ParallaxPageElement() {
                 <ParallaxLayer
                     offset={2}
                     speed={1}
+                    factor={4}
+                    sticky={{start: 2, end: 4}}
                 >
-             {/*       <Image
+                    {/*       <Image
                         objectFit="cover"
                         src={land}
                         alt="Picture of the author"
                     />*/}
-                    <ExplodeMe />
+                    <ExplodeMe scrollRatio={scrollRatio}/>
 
+                </ParallaxLayer>
+
+                <ParallaxLayer
+                    offset={6}
+                    speed={1}
+                >
+                    <BoundingHeadlineBox>
+                            <Headline {...headlineColor}>Thats me</Headline>
+                    </BoundingHeadlineBox>
                 </ParallaxLayer>
 
                 {/*
@@ -154,7 +168,7 @@ export default function ParallaxPageElement() {
                     />
 
                 </ParallaxLayer>
-                */ }
+                */}
 
                 <ParallaxLayer
                     sticky={{start: 0.9, end: 2.5}}
